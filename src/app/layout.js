@@ -1,4 +1,5 @@
 import localFont from "next/font/local";
+import BackgroundAnimation from './components/BackgroundAnimation'
 import "./globals.css";
 
 const geistSans = localFont({
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <BackgroundAnimation/>
         {children}
       </body>
     </html>
