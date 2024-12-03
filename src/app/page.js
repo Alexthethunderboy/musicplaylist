@@ -11,17 +11,23 @@ export default function Home() {
   const [selectedGenre, setSelectedGenre] = useState('')
   const [playlist, setPlaylist] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const generatePlaylist = async () => {
     if (!selectedGenre) return
 
     setIsLoading(true)
+    setError(null)
     try {
-      const response = await fetch(`/api/generate-playlist?genre=${selectedGenre}`)
+      const response = await fetch(`/api/generate-playlist?genre=${encodeURIComponent(selectedGenre)}`)
+      if (!response.ok) {
+        throw new Error('Failed to generate playlist')
+      }
       const data = await response.json()
       setPlaylist(data.playlist)
     } catch (error) {
       console.error('Error generating playlist:', error)
+      setError('Failed to generate playlist. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -58,6 +64,15 @@ export default function Home() {
         >
           {isLoading ? 'Generating...' : 'Generate Playlist'}
         </Button>
+        {error && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-red-400 text-center"
+          >
+            {error}
+          </motion.p>
+        )}
         <AnimatePresence mode="wait">
           {playlist.length > 0 && (
             <PlaylistDisplay key="playlist" playlist={playlist} />

@@ -77,21 +77,3 @@
   }
 }
 
-/* Custom styles */
-.bg-gradient-to-br {
-  background-image: linear-gradient(to bottom right, var(--tw-gradient-stops));
-}
-
-.from-purple-700 {
-  --tw-gradient-from: #6d28d9;
-  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgba(109, 40, 217, 0));
-}
-
-.to-indigo-900 {
-  --tw-gradient-to: #312e81;
-}
-
-.backdrop-blur-lg {
-  backdrop-filter: blur(16px);
-}
-

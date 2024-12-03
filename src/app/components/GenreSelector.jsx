@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-const genres = ['Pop', 'Rock', 'Jazz', 'Hip Hop', 'Classical', 'Electronic', 'R&B', 'Country']
+const genres = ['Pop', 'Rock', 'Jazz', 'Hip Hop', 'Classical', 'Electronic', 'R&B', 'Country', 'Reggae', 'Latin', 'Blues', 'Folk', 'Afrobeats']
 
 export default function GenreSelector({ onGenreSelect }) {
   return (
