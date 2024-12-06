@@ -4,12 +4,14 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import GenreSelector from './components/GenreSelector'
 import PlaylistDisplay from './components/PlaylistDisplay'
+import RecommendedPlaylists from './components/RecommendedPlaylists'
 import { Button } from '@/components/ui/button'
 import { Disc3 } from 'lucide-react'
 
 export default function Home() {
   const [selectedGenre, setSelectedGenre] = useState('')
   const [playlist, setPlaylist] = useState([])
+  const [recommendedPlaylists, setRecommendedPlaylists] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
 
@@ -19,17 +21,21 @@ export default function Home() {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch(`http://localhost:8000/api/generate-playlist?genre=${encodeURIComponent(selectedGenre)}`)
-      const data = await response.json()
+      const playlistResponse = await fetch(`http://localhost:8000/api/generate-playlist?genre=${encodeURIComponent(selectedGenre)}`)
+      const recommendationsResponse = await fetch(`http://localhost:8000/api/recommend-playlists?genre=${encodeURIComponent(selectedGenre)}`)
       
-      if (!response.ok) {
-        throw new Error(data.detail || 'Failed to generate playlist')
+      if (!playlistResponse.ok || !recommendationsResponse.ok) {
+        throw new Error('Failed to fetch data')
       }
       
-      setPlaylist(data.playlist)
+      const playlistData = await playlistResponse.json()
+      const recommendationsData = await recommendationsResponse.json()
+      
+      setPlaylist(playlistData.playlist)
+      setRecommendedPlaylists(recommendationsData.recommended_playlists)
     } catch (error) {
       console.error('Error generating playlist:', error)
-      setError(error.message || 'Failed to generate playlist. Please try again.')
+      setError('Failed to generate playlist. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -53,7 +59,7 @@ export default function Home() {
         <p className="text-lg sm:text-xl text-purple-200">Discover your next favorite playlist</p>
       </motion.div>
       <motion.div 
-        className="w-full max-w-md space-y-6 bg-white/10 backdrop-blur-lg rounded-xl p-6 sm:p-8 shadow-2xl"
+        className="w-full max-w-4xl space-y-6 bg-white/10 backdrop-blur-lg rounded-xl p-6 sm:p-8 shadow-2xl"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.3 }}
@@ -76,6 +82,7 @@ export default function Home() {
           </motion.p>
         )}
         <PlaylistDisplay playlist={playlist} />
+        <RecommendedPlaylists playlists={recommendedPlaylists} />
       </motion.div>
     </motion.main>
   )
