@@ -10,7 +10,7 @@ import { Disc3 } from 'lucide-react'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_VERCEL_URL 
   ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` 
-  : 'http://localhost:3000'
+  : 'http://localhost:8000'  // Update this to match your FastAPI port
 
 export default function Home() {
   const [selectedGenre, setSelectedGenre] = useState('')
