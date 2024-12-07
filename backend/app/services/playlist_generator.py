@@ -2,12 +2,11 @@ import requests
 import os
 from dotenv import load_dotenv
 import logging
-
-load_dotenv()
+from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-RAPIDAPI_KEY = os.getenv('RAPIDAPI_KEY')
+RAPIDAPI_KEY = settings.RAPIDAPI_KEY
 SPOTIFY_API_HOST = "spotify23.p.rapidapi.com"
 
 def generate_playlist(genre: str) -> list:
