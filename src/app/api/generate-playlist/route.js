@@ -1,75 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
+import axios from 'axios'; // Use axios for making API requests
+import { RAPIDAPI_KEY } from '@/lib/config'; // Make sure to set this up in your environment variables
 
-// Mock function to generate a playlist
-function generateMockPlaylist(genre) {
-  const playlists = {
-    Pop: [
-      { title: "Shape of You", artist: "Ed Sheeran" },
-      { title: "Blinding Lights", artist: "The Weeknd" },
-      { title: "Dance Monkey", artist: "Tones and I" },
-      { title: "Shake It Off", artist: "Taylor Swift" },
-      { title: "Bad Guy", artist: "Billie Eilish" },
-    ],
-    Rock: [
-      { title: "Stairway to Heaven", artist: "Led Zeppelin" },
-      { title: "Bohemian Rhapsody", artist: "Queen" },
-      { title: "Smells Like Teen Spirit", artist: "Nirvana" },
-      { title: "Sweet Child O' Mine", artist: "Guns N' Roses" },
-      { title: "Back in Black", artist: "AC/DC" },
-    ],
-    Jazz: [
-      { title: "Take Five", artist: "Dave Brubeck" },
-      { title: "So What", artist: "Miles Davis" },
-      { title: "Giant Steps", artist: "John Coltrane" },
-      { title: "Sing, Sing, Sing", artist: "Benny Goodman" },
-      { title: "What a Wonderful World", artist: "Louis Armstrong" },
-    ],
-    "Hip Hop": [
-      { title: "Sicko Mode", artist: "Travis Scott" },
-      { title: "God's Plan", artist: "Drake" },
-      { title: "Old Town Road", artist: "Lil Nas X" },
-      { title: "Lose Yourself", artist: "Eminem" },
-      { title: "HUMBLE.", artist: "Kendrick Lamar" },
-    ],
-    Classical: [
-      { title: "Fur Elise", artist: "Beethoven" },
-      { title: "Canon in D", artist: "Pachelbel" },
-      { title: "The Four Seasons", artist: "Vivaldi" },
-      { title: "Clair de Lune", artist: "Debussy" },
-      { title: "The Magic Flute", artist: "Mozart" },
-    ],
-    Electronic: [
-      { title: "Strobe", artist: "Deadmau5" },
-      { title: "Levels", artist: "Avicii" },
-      { title: "Titanium", artist: "David Guetta" },
-      { title: "Scary Monsters and Nice Sprites", artist: "Skrillex" },
-      { title: "Closer", artist: "The Chainsmokers" },
-    ],
-    "R&B": [
-      { title: "Blame It", artist: "Jamie Foxx" },
-      { title: "Love on Top", artist: "Beyoncé" },
-      { title: "Adorn", artist: "Miguel" },
-      { title: "Confessions Part II", artist: "Usher" },
-      { title: "No Guidance", artist: "Chris Brown" },
-    ],
-    Country: [
-      { title: "Take Me Home, Country Roads", artist: "John Denver" },
-      { title: "Jolene", artist: "Dolly Parton" },
-      { title: "Tennessee Whiskey", artist: "Chris Stapleton" },
-      { title: "Friends in Low Places", artist: "Garth Brooks" },
-      { title: "The Gambler", artist: "Kenny Rogers" },
-    ],
-    Afrobeats: [
-      { title: "Ye", artist: "Burna Boy" },
-      { title: "Dumebi", artist: "Rema" },
-      { title: "Essence", artist: "Wizkid ft. Tems" },
-      { title: "On the Low", artist: "Burna Boy" },
-      { title: "Joro", artist: "Wizkid" },
-    ],
-  };
-
-  return playlists[genre] || [];
-}
+const SPOTIFY_API_HOST = "spotify23.p.rapidapi.com";
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -79,14 +12,51 @@ export async function GET(request) {
     return NextResponse.json({ error: "Genre is required" }, { status: 400 });
   }
 
-  const playlist = generateMockPlaylist(genre);
+  console.log("RAPIDAPI_KEY:", RAPIDAPI_KEY); // Log the RAPIDAPI_KEY
 
-  if (playlist.length === 0) {
-    return NextResponse.json(
-      { error: "No playlist found for the given genre" },
-      { status: 404 }
-    );
+  try {
+    // Search for a playlist
+    const searchUrl = `https://${SPOTIFY_API_HOST}/search/`;
+    const searchResponse = await axios.get(searchUrl, {
+      headers: {
+        "X-RapidAPI-Key": RAPIDAPI_KEY,
+        "X-RapidAPI-Host": SPOTIFY_API_HOST,
+      },
+      params: {
+        q: genre,
+        type: "playlists",
+        offset: "0",
+        limit: "1",
+        numberOfTopResults: "1",
+      },
+    });
+
+    const playlistId = searchResponse.data.playlists.items[0].data.uri.split(':').pop();
+
+    // Get tracks from the playlist
+    const tracksUrl = `https://${SPOTIFY_API_HOST}/playlist_tracks/`;
+    const tracksResponse = await axios.get(tracksUrl, {
+      headers: {
+        "X-RapidAPI-Key": RAPIDAPI_KEY,
+        "X-RapidAPI-Host": SPOTIFY_API_HOST,
+      },
+      params: {
+        id: playlistId,
+        offset: "0",
+        limit: "10",
+      },
+    });
+
+    const playlist = tracksResponse.data.items.map(track => ({
+      title: track.track.name,
+      artist: track.track.artists[0].name,
+      preview_url: track.track.preview_url,
+      album_art: track.track.album.images[0]?.url || null,
+    }));
+
+    return NextResponse.json({ playlist });
+  } catch (error) {
+    console.error("Error generating playlist:", error);
+    return NextResponse.json({ error: "Failed to generate playlist" }, { status: 500 });
   }
-
-  return NextResponse.json({ playlist });
 }

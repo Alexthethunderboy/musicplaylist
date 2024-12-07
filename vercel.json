@@ -1,15 +1,27 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "backend/app/main.py",
-        "use": "@vercel/python"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "backend/app/main.py"
-      }
-    ]
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "api/index.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "env": {
+    "RAPIDAPI_KEY": "3d3cf82d64mshee8e2b6bb7e7575p11d2b8jsn6bd06004b21c",
+    "FRONTEND_URL": "https://musicplaylist-xi.vercel.app/"
   }
+}
