@@ -2,27 +2,14 @@
     "version": 2,
     "builds": [
       {
-        "src": "package.json",
-        "use": "@vercel/next"
-      },
-      {
-        "src": "api/index.py",
+        "src": "backend/app/main.py",
         "use": "@vercel/python"
       }
     ],
     "routes": [
       {
         "src": "/api/(.*)",
-        "dest": "api/index.py"
-      },
-      {
-        "src": "/(.*)",
-        "dest": "/$1"
+        "dest": "backend/app/main.py"
       }
-    ],
-    "env": {
-      "RAPIDAPI_KEY": "@rapidapi_key"
-    }
+    ]
   }
-  
-  
