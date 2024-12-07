@@ -29,7 +29,7 @@ def generate_playlist(genre: str) -> list:
         playlist_id = search_data['playlists']['items'][0]['data']['uri'].split(':')[-1]
         
         # Get tracks from the playlist
-        tracks_url = f"https://spotify23.p.rapidapi.com/playlist_tracks/?id={playlist_id}&offset=0&limit=5"
+        tracks_url = f"https://spotify23.p.rapidapi.com/playlist_tracks/?id={playlist_id}&offset=0&limit=10"
         tracks_response = requests.get(tracks_url, headers=headers)
         tracks_response.raise_for_status()
         tracks_data = tracks_response.json()
@@ -38,7 +38,8 @@ def generate_playlist(genre: str) -> list:
             {
                 "title": track['track']['name'],
                 "artist": track['track']['artists'][0]['name'],
-                "preview_url": track['track']['preview_url']
+                "preview_url": track['track']['preview_url'],
+                "album_art": track['track']['album']['images'][0]['url'] if track['track']['album']['images'] else None
             }
             for track in tracks_data['items']
         ]

@@ -1,7 +1,9 @@
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load .env file only in development
+if os.getenv('VERCEL_ENV') != 'production':
+    load_dotenv()
 
 class Settings:
     PROJECT_NAME: str = "Music Playlist Generator"

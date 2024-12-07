@@ -8,6 +8,10 @@ import RecommendedPlaylists from './components/RecommendedPlaylists'
 import { Button } from '@/components/ui/button'
 import { Disc3 } from 'lucide-react'
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_VERCEL_URL 
+  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` 
+  : 'http://localhost:3000'
+
 export default function Home() {
   const [selectedGenre, setSelectedGenre] = useState('')
   const [playlist, setPlaylist] = useState([])
@@ -21,8 +25,8 @@ export default function Home() {
     setIsLoading(true)
     setError(null)
     try {
-      const playlistResponse = await fetch(`http://localhost:8000/api/generate-playlist?genre=${encodeURIComponent(selectedGenre)}`)
-      const recommendationsResponse = await fetch(`http://localhost:8000/api/recommend-playlists?genre=${encodeURIComponent(selectedGenre)}`)
+      const playlistResponse = await fetch(`${API_BASE_URL}/api/generate-playlist?genre=${encodeURIComponent(selectedGenre)}`)
+      const recommendationsResponse = await fetch(`${API_BASE_URL}/api/recommend-playlists?genre=${encodeURIComponent(selectedGenre)}`)
       
       if (!playlistResponse.ok || !recommendationsResponse.ok) {
         throw new Error('Failed to fetch data')

@@ -46,22 +46,25 @@ export default function PlaylistDisplay({ playlist }) {
             className="bg-white/10 p-4 rounded-lg backdrop-blur-sm flex items-center space-x-4 hover:bg-white/20 transition-colors duration-200"
             variants={itemVariants}
           >
-            <div className="flex-shrink-0">
-              {song.preview_url ? (
+            <div className="flex-shrink-0 w-16 h-16 relative">
+              {song.album_art ? (
+                <img src={song.album_art} alt={`${song.title} album art`} className="w-full h-full object-cover rounded-md" />
+              ) : (
+                <div className="w-full h-full bg-gray-500 rounded-md flex items-center justify-center">
+                  <Music className="w-8 h-8 text-white" />
+                </div>
+              )}
+              {song.preview_url && (
                 <button
                   onClick={() => togglePlay(song.preview_url, index)}
-                  className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center hover:bg-purple-600 transition-colors duration-200"
+                  className="absolute bottom-1 right-1 w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center hover:bg-purple-600 transition-colors duration-200"
                 >
                   {currentlyPlaying === index ? (
-                    <Pause className="w-5 h-5 text-white" />
+                    <Pause className="w-4 h-4 text-white" />
                   ) : (
-                    <Play className="w-5 h-5 text-white" />
+                    <Play className="w-4 h-4 text-white" />
                   )}
                 </button>
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center">
-                  <Music className="w-5 h-5 text-white" />
-                </div>
               )}
             </div>
             <div className="flex-grow">
