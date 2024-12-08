@@ -90,8 +90,4 @@ def recommend_playlists(genre: str) -> list:
         raise ValueError(f"Failed to recommend playlists: {str(e)}")
     except (KeyError, IndexError) as e:
         logger.error(f"Error parsing API response: {str(e)}")
-        raise ValueError(f"Error parsing playlist recommendations: {str(e)}")
-    except Exception as e:
-        logger.error(f"Unexpected error: {str(e)}")
-        raise ValueError(f"Unexpected error recommending playlists: {str(e)}")
 

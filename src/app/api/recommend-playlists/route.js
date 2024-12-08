@@ -21,8 +21,8 @@ export async function GET(request) {
         q: genre,
         type: 'playlists',
         offset: '0',
-        limit: '1',
-        numberOfTopResults: '1'
+        limit: '5',
+        numberOfTopResults: '5'
       },
       headers: {
         'X-RapidAPI-Key': rapidApiKey,
@@ -30,24 +30,17 @@ export async function GET(request) {
       }
     });
 
-    const playlistId = response.data.playlists.items[0].data.uri.split(':').pop();
-    const tracksResponse = await axios.get(`https://spotify23.p.rapidapi.com/playlist_tracks/?id=${playlistId}&offset=0&limit=10`, {
-      headers: {
-        'X-RapidAPI-Key': rapidApiKey,
-        'X-RapidAPI-Host': 'spotify23.p.rapidapi.com'
-      }
-    });
-
-    const playlist = tracksResponse.data.items.map(item => ({
-      title: item.track.name,
-      artist: item.track.artists[0].name,
-      album_art: item.track.album.images[0].url
+    const recommendedPlaylists = response.data.playlists.items.map(playlist => ({
+      name: playlist.data.name,
+      description: playlist.data.description,
+      image_url: playlist.data.images.items[0].sources[0].url,
+      spotify_url: `https://open.spotify.com/playlist/${playlist.data.uri.split(':').pop()}`
     }));
 
-    return NextResponse.json({ playlist });
+    return NextResponse.json({ recommended_playlists: recommendedPlaylists });
   } catch (error) {
-    console.error('Error generating playlist:', error);
-    return NextResponse.json({ error: 'Failed to generate playlist' }, { status: 500 });
+    console.error('Error recommending playlists:', error);
+    return NextResponse.json({ error: 'Failed to recommend playlists' }, { status: 500 });
   }
 }
 

@@ -1,4 +1,11 @@
-// src/lib/config.js
+export const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
 
-// Make sure to set your RapidAPI key in your environment variables
-export const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || '3d3cf82d64mshee8e2b6bb7e7575p11d2b8jsn6bd06004b21c';
+export function getImageDomains() {
+  return [
+    'i.scdn.co', // Add any domains that host your images
+    'seed-mix-image.spotifycdn.com', // Add the new domain
+    'mosaic.scdn.co', // Add the new domain
+    'image-cdn-ak.spotifycdn.com', // Add the new domain
+    'wrapped-images.spotifycdn.com' // Add the new domain
+  ];
+}

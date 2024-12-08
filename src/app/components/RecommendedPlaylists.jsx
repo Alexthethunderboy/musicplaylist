@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -37,7 +38,7 @@ export default function RecommendedPlaylists({ playlists }) {
             className="bg-white/10 rounded-lg overflow-hidden hover:bg-white/20 transition-colors duration-200"
             variants={itemVariants}
           >
-            <img src={playlist.image_url} alt={playlist.name} className="w-full h-48 object-cover" />
+<Image src={playlist.image_url} alt={playlist.name} className="w-full h-48 object-cover" width={192} height={192} />
             <div className="p-4">
               <h3 className="font-medium text-lg mb-2">{playlist.name}</h3>
               <p className="text-sm text-purple-200 line-clamp-2">{playlist.description}</p>

@@ -8,9 +8,7 @@ import RecommendedPlaylists from './components/RecommendedPlaylists'
 import { Button } from '@/components/ui/button'
 import { Disc3 } from 'lucide-react'
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_VERCEL_URL 
-  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` 
-  : 'http://localhost:8000'  // Update this to match your FastAPI port
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3000'
 
 export default function Home() {
   const [selectedGenre, setSelectedGenre] = useState('')

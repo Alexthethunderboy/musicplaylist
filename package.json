@@ -1,10 +1,10 @@
 {
-  "name": "music-playlist-generator",
-  "version": "0.1.0",
-  "private": true,
+  "name": "musicplaylist",
+  "version": "1.0.0",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "update-next-config": "node scripts/update_next_config.js",
+    "dev": "npm run update-next-config && next dev",
+    "build": "npm run update-next-config && next build",
     "start": "next start",
     "lint": "next lint",
     "backend": "cd backend && uvicorn app.main:app --reload --host 0.0.0.0 --port 8000"
@@ -15,6 +15,7 @@
     "axios": "^1.7.9",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "dotenv": "^16.0.3",
     "framer-motion": "^10.16.5",
     "lucide-react": "^0.292.0",
     "next": "^14.2.20",
@@ -31,3 +32,4 @@
     "tailwindcss": "^3.3.0"
   }
 }
+
